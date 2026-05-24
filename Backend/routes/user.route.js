@@ -43,9 +43,11 @@ router.post("/send-otp", async (req, res) => {
 
 router.get("/health", async (req, res) => {
     try {
+        console.log("conecting db")
         await mongoose.connection.db.admin().ping();
         res.json({ success: true });
-    } catch {
+    } catch(error) {
+        console.log(error)
         res.status(500).json({ success: false });
     }
 });
