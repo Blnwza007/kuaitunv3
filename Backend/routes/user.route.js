@@ -1,20 +1,11 @@
 import express from "express";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 
 const router = express.Router();
 
-const transport = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 2525,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL,
-        pass: process.env.EMAIL_PASS
-    },
-    family: 4
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const otpStore = {};
 
@@ -35,12 +26,14 @@ router.post("/send-otp", async (req, res) => {
 
         const otp = String(Math.floor(100000 + Math.random() * 900000));
         otpStore[email] = otp;
-        await transport.sendMail({
+        
+        await sgMail.send({
             from: process.env.EMAIL,
             to: email,
             subject: "OTP ยืนยันตัวเว็บ KuaitunDemonLord",
             text: `OTP ของคุณคือ: ${otp}`
         });
+        console.log("ส่งเสร็จเรียบร้อย✅✅")
         return res.json( { success: true } );
     } catch(error) {
         console.log(error)
