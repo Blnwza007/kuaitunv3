@@ -650,8 +650,8 @@ dialog::backdrop {
     animation: fadeSlideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.picture img {
-    animation: scaleIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+.picture img.entrance {
+    animation: scaleIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
 }
 
 header {

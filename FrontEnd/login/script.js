@@ -6,6 +6,7 @@ const dialog = document.querySelector("dialog");
 const closeDialog = document.getElementById("close");
 const picture = document.querySelector(".picture");
 const imgList = document.querySelectorAll(".picture img");
+imgList[0].classList.add("entrance");
 let countList = 0;
 let isAnimating = false;
 const loadingOverlay = document.getElementById("loadingOverlay");
@@ -43,7 +44,7 @@ const checkSever = async () => {
             }
         } catch (e) {
         }
-        await new Promise(r => setTimeout(r, 3000)); // รอ 3 วิแล้วลองใหม่
+        await new Promise(r => setTimeout(r, 3000)); 
     }
 }
 checkSever()
@@ -82,10 +83,11 @@ picture.addEventListener("click", () => {
     countList = (countList + 1) % imgList.length;
     const next = imgList[countList];
 
+    next.style.transition = "none";
     next.style.opacity = "0";
     next.style.display = "block";
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
         next.style.transition = "opacity 0.6s ease";
         next.style.opacity = "1";
         current.style.transition = "opacity 0.6s ease";
@@ -97,7 +99,7 @@ picture.addEventListener("click", () => {
             current.style.transition = "";
             isAnimating = false;
         }, 600);
-    });
+    }, 20); 
 });
 
 closeDialog.addEventListener("click", () => {
