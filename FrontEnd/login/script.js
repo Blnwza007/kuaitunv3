@@ -24,19 +24,26 @@ const checkSever = async () => {
 
     let i = 0;
     const loadingText = document.getElementById("textloading");
-    
+
     const interval = setInterval(() => {
-    loadingText.innerText = msgs[i % msgs.length];
-    i++;
+        loadingText.innerText = msgs[i % msgs.length];
+        i++;
     }, 2000);
+    
+    while (true) {
+        try {
+            const res = await fetch("https://kuaitunv3.onrender.com/health");
+            const data = await res.json();
 
-    const res = await fetch("https://kuaitunv3.onrender.com/health");
-    const data = await res.json();
-
-    if (data.success) {
-        clearInterval(interval);
-        loadingOverlay.style.display = "none";
-        container.style.visibility = "visible";
+            if (data.success) {
+                clearInterval(interval);
+                loadingOverlay.style.display = "none";
+                container.style.visibility = "visible";
+                break;
+            }
+        } catch (e) {
+        }
+        await new Promise(r => setTimeout(r, 3000)); // รอ 3 วิแล้วลองใหม่
     }
 }
 checkSever()
