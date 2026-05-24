@@ -6,19 +6,16 @@ import nodemailer from "nodemailer";
 const router = express.Router();
 
 const transport = nodemailer.createTransport({
-host: "smtp.gmail.com",
+    host: "smtp.gmail.com",
     port: 587,
-    secure: false, 
+    secure: false,
     auth: {
         user: process.env.EMAIL,
         pass: process.env.EMAIL_PASS
     },
-    family: 4, 
-    tls: {
-        rejectUnauthorized: false,
-        ciphers: 'SSLv3'
-    }
+    family: 4  
 });
+
 const otpStore = {};
 
 router.post("/send-otp", async (req, res) => {
