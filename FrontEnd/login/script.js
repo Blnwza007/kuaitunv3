@@ -30,7 +30,7 @@ const checkSever = async () => {
     i++;
     }, 2000);
 
-    const res = await fetch("https://kuaitunv3.onrender.com/user/health");
+    const res = await fetch("https://kuaitunv3.onrender.com/health");
     const data = await res.json();
 
     if (data.success) {

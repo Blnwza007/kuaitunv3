@@ -19,6 +19,16 @@ mongoose.connect(process.env.MONGODB_URI, {
     console.log("Conected failed", error);
 })
 
+app.get("/health", async (req, res) => {
+    try {
+        await mongoose.connection.db.admin().ping();
+        res.json({ success: true });
+    } catch(error) {
+        console.log(error)
+        res.status(500).json({ success: false });
+    }
+});
+
 app.use("/user", userRouter);
 
 app.listen(PORT,() => {
