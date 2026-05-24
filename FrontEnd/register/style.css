@@ -1,0 +1,510 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap');
+ 
+/* ─── Reset ─── */
+*, *::before, *::after { box-sizing: border-box; }
+ 
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #1a1a2e;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+}
+ 
+/* ─── #lnw debug button ─── */
+#lnw {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.06);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    color: rgba(255,255,255,0.3);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: inherit;
+    z-index: 100;
+    transition: background 0.15s;
+}
+#lnw:hover { background: rgba(255,255,255,0.1); }
+ 
+/* ─── Card ─── */
+.container {
+    width: 100%;
+    max-width: 400px;
+    background: #12121f;
+    border: 0.5px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    margin: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    height: auto;
+}
+ 
+/* Ambient glow accents */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%);
+    pointer-events: none;
+}
+.container::after {
+    content: '';
+    position: absolute;
+    bottom: -50px; left: -50px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(236,72,153,0.12) 0%, transparent 70%);
+    pointer-events: none;
+}
+ 
+/* ─── Header ─── */
+header {
+    margin-bottom: 2rem;
+}
+ 
+header::before {
+    content: '● New account';
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(139,92,246,0.15);
+    border: 0.5px solid rgba(139,92,246,0.4);
+    color: #c4b5fd;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    display: block;
+}
+ 
+header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    color: #f4f4f8;
+    margin: 0 0 0.25rem;
+    line-height: 1.2;
+    text-transform: capitalize;
+}
+ 
+/* ─── Form group ─── */
+.from-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+ 
+.from-group label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 14px;
+}
+ 
+.from-group label:first-child {
+    margin-top: 0;
+}
+
+/* ─── Inputs ─── */
+#name, #email, #password {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: #f0f0f4;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+#name::placeholder, #email::placeholder, #password::placeholder {
+    color: rgba(255,255,255,0.18);
+}
+ 
+#name:focus, #email:focus, #password:focus {
+    border-color: rgba(139,92,246,0.6);
+    background: rgba(139,92,246,0.06);
+}
+ 
+/* ─── Submit button ─── */
+#submit {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+    position: relative;
+    overflow: hidden;
+}
+ 
+#submit:hover { opacity: 0.9; }
+#submit:active { transform: scale(0.98); }
+ 
+/* ─── Error text ─── */
+#error {
+    color: #f87171;
+    font-size: 12px;
+    margin: 10px 0 0;
+    min-height: 16px;
+    text-align: center;
+}
+#loadingOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    font-family: sans-serif;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #222121;     
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+#textloading {
+    margin-top: 15px; 
+    font-size: 18px;
+}
+
+#modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    border: none;
+    border-radius: 20px;
+    padding: 2rem 1.75rem;
+    width: 85%;
+    max-width: 320px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.08);
+    font-family: 'DM Sans', sans-serif;
+    text-align: center;
+}
+
+#modal::backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+}
+
+#modal p {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #f2f2f7;
+    margin: 0 0 0.25rem;
+}
+
+#modal label {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: block;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#otp {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    font-size: 22px;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 8px;
+    background: rgba(255,255,255,0.05);
+    border: 0.5px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    outline: none;
+    color: #f0f0f4;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+#otp::placeholder {
+    color: rgba(255,255,255,0.15);
+}
+
+#otp:focus {
+    border-color: rgba(139,92,246,0.55);
+    background: rgba(139,92,246,0.06);
+}
+
+#modal button {
+    width: 100%;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    border-radius: 9px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: opacity 0.15s, transform 0.1s;
+}
+
+#confrimBtn {
+    background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+    color: #ffffff;
+    margin-bottom: 8px;
+}
+
+#confrimBtn:hover { opacity: 0.88; }
+
+#closemodal {
+    background: rgba(255,255,255,0.04);
+    border: 0.5px solid rgba(255,255,255,0.1) !important;
+    color: rgba(255,255,255,0.45);
+}
+
+#closemodal:hover { background: rgba(255,255,255,0.08); }
+#modal button:active { transform: scale(0.97); }
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#login {
+    font-family: 'DM Sans', sans-serif;
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    margin-top: 14px;
+}
+
+/* ─── Password input wrapper ─── */
+
+.from-pass {
+    position: relative;
+}
+ 
+.from-pass #password {
+    padding-right: 38px;
+}
+ 
+.lock-pass, .unlock-pass {
+    position: absolute;
+    right: 12px;
+    bottom: 6px;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    z-index: 99;
+}
+.unlock-pass {
+    display: none;
+}
+ 
+.lock-pass:hover,
+.unlock-pass:hover {
+    opacity: 0.9;
+}
+ 
+.lock-pass svg path,
+.unlock-pass svg path {
+    fill: rgba(255,255,255,0.7);
+}
+ 
+
+/* ─── Media Queries (Responsive) ─── */
+
+@media (max-width: 425px) {
+    .container {
+        width: 90%; 
+        max-width: 300px; 
+        padding: 2rem 1.5rem;         
+        margin: 1rem auto; 
+        border-radius: 16px;
+    }
+    
+    header h1 {
+        font-size: 24px;
+    }
+    
+    #submit {
+        padding: 11px;
+        font-size: 13px;
+    }
+    
+    #modal {
+        width: 90%;
+        padding: 1.75rem 1.25rem;
+    }
+    
+    #otp {
+        font-size: 18px;
+        letter-spacing: 6px;
+    }
+}
+
+@media (max-height: 650px) {
+    body {
+        align-items: center; 
+        overflow-y: auto;        
+    }
+
+    .container {
+        margin: 1rem auto;     
+        border-radius: 14px;
+    }
+
+    header {
+        margin-bottom: 1rem;     
+    }
+
+    header::before {
+        margin-bottom: 0.5rem;   
+        padding: 5px 10px;
+    }
+
+    header h1 {
+        font-size: 22px;         
+    }
+
+    .from-group label {
+        margin-top: 8px;         
+        margin-bottom: 4px;
+    }
+
+    #name, #email, #password {
+        padding: 9px 12px;       
+        font-size: 13px;
+    }
+
+    #submit {
+        margin-top: 1rem;        
+        padding: 11px;
+        font-size: 13px;
+    }
+
+    #login {
+        margin-top: 10px;        /* ลดระยะห่างของข้อความด้านล่างสุด */
+    }
+}
+
+/* ─── Page entrance animations ─── */
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glowPulse {
+    0%, 100% { opacity: 0.18; }
+    50%       { opacity: 0.32; }
+}
+
+@keyframes badgePop {
+    from { opacity: 0; transform: scale(0.88); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes inputReveal {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes ScaleUpIn {
+    0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes ScaleDownOut {
+    0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(0.2); opacity: 0; }
+}
+
+/* ─── Apply to elements ─── */
+.container {
+    animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+dialog[open] {
+    animation: ScaleUpIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+dialog.closing {
+    animation: ScaleDownOut 0.6s ease-in forwards;
+}
+
+.container::before {
+    animation: glowPulse 4s ease-in-out 1s infinite;
+}
+
+.container::after {
+    animation: glowPulse 5s ease-in-out 1.5s infinite;
+}
+
+header {
+    animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+
+header::before {
+    animation: badgePop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s both;
+}
+
+header h1 {
+    animation: fadeUp 0.45s ease 0.35s both;
+}
+
+.from-group label:nth-of-type(1) { animation: inputReveal 0.35s ease 0.45s both; }
+.from-group label:nth-of-type(2) { animation: inputReveal 0.35s ease 0.52s both; }
+.from-group label:nth-of-type(3) { animation: inputReveal 0.35s ease 0.59s both; }
+
+#name     { animation: fadeUp 0.35s ease 0.5s both; }
+#email    { animation: fadeUp 0.35s ease 0.57s both; }
+#password { animation: fadeUp 0.35s ease 0.64s both; }
+
+#submit {
+    animation: fadeUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.72s both;
+}
+
+#login {
+    animation: fadeUp 0.3s ease 0.82s both;
+}
