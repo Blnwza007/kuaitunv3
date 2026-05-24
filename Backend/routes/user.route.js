@@ -41,6 +41,15 @@ router.post("/send-otp", async (req, res) => {
     }
 })
 
+router.get("/health", async (req, res) => {
+    try {
+        await mongoose.connection.db.admin().ping();
+        res.json({ success: true });
+    } catch {
+        res.status(500).json({ success: false });
+    }
+});
+
 router.post("/register", async (req, res) => {
     try {
     const { name, pass, email, otp } = req.body;

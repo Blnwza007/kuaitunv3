@@ -1,3 +1,4 @@
+const container = document.querySelector(".container");
 const btn = document.getElementById("submit");
 const errMsg = document.getElementById("error");
 const leaderBordBtn = document.getElementById("openLeader");
@@ -7,8 +8,38 @@ const picture = document.querySelector(".picture");
 const imgList = document.querySelectorAll(".picture img");
 let countList = 0;
 let isAnimating = false;
+const loadingOverlay = document.getElementById("loadingOverlay");
 const unlockPass = document.querySelector(".unlock-pass")
 const lockPass = document.querySelector(".lock-pass")
+
+const checkSever = async () => {
+
+    const msgs = [
+    "⚔️ กำลังต่อสู้กับ bug...",
+    "🧙 casting mongoose.connect()...",
+    "🐉 สู้กับ dragon ชื่อ ECONNREFUSED...",
+    "✨ กำลังเรียก server ให้ตื่น...",
+    "🏆 เกือบแล้ว อย่าหนีไปไหน..."
+    ]
+
+    let i = 0;
+    const loadingText = document.getElementById("textloading");
+    
+    const interval = setInterval(() => {
+    loadingText.innerText = msgs[i % msgs.length];
+    i++;
+    }, 2000);
+
+    const res = await fetch("https://kuaitunv3.onrender.com/user/health");
+    const data = await res.json();
+
+    if (data.success) {
+        clearInterval(interval);
+        loadingOverlay.style.display = "none";
+        container.style.visibility = "visible";
+    }
+}
+checkSever()
 
 lockPass.addEventListener("click", () => {
     const typePass = document.getElementById("password")
