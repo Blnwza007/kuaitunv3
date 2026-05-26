@@ -72,7 +72,7 @@ createBtn.addEventListener("click", async() => {
         } else if (user.pass.length < 8) {
             errMsg.innerText = "รหัสต้องมากกว่า 8 ครับท่าน"
         } else {
-            /* loadingOverlay.style.display = "flex"; */
+            loadingOverlay.style.display = "flex"; 
             const res = await fetch("https://kuaitunv3.onrender.com/user/register", {
                 method: "POST",
                 headers: {
@@ -82,7 +82,7 @@ createBtn.addEventListener("click", async() => {
             });
         
         const data = await res.json();
-        /* loadingOverlay.style.display = "none"; */
+        loadingOverlay.style.display = "none";
         
         if (data.success) {
             /* userData = user */
@@ -91,12 +91,11 @@ createBtn.addEventListener("click", async() => {
         } else {
             alert(data.msg);
         }
-    }
+    } 
     } catch (error) {
         console.error(error);
     }
-});
-
+})
 /* confirmBtn.addEventListener("click", async () => {
     try {
         const inputOtp = document.getElementById("otp").value.trim();

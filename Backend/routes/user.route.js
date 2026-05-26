@@ -60,9 +60,9 @@ router.post("/register", async (req, res) => {
         pass: hashedPass,
         email
      });  
-        
+        console.log(`สร้างบัญชีเสร็จแล้ว ${name}`);
         await user.save(); 
-        return res.json( { success: true });
+        return res.json( { success: true, msg: "สมัครบัญชีเรียบร้อย"} );
     }
 
     } catch(error) {
@@ -88,7 +88,7 @@ router.post("/login", async (req, res) => {
     }
     
     await User.findByIdAndUpdate(userFind._id, { hasLoggedIn: true });
-
+    console.log(`loginเสร็จแล้ว ${nameInput}`);
     res.json( { msg: "สมัครเป็นแฟนไข่ตุ๋นสำเร็จ" } );
     }
     catch(error) {
