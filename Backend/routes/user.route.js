@@ -1,11 +1,11 @@
 import express from "express";
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
-import sgMail from "@sendgrid/mail";
+/* import sgMail from "@sendgrid/mail"; */
 
 const router = express.Router();
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+/* sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const otpStore = {};
 
@@ -14,7 +14,7 @@ router.post("/send-otp", async (req, res) => {
     try {
         const { name, email } = req.body;
         console.log("body:", req.body);
-
+        
         const userFind = await User.findOne({ $or: [{ name }, { email }] });
         if (userFind) {
             if (userFind.name === name) {
@@ -22,7 +22,7 @@ router.post("/send-otp", async (req, res) => {
             } else if (userFind.email === email) {
                 return res.json( { msg: "อีเมลมีคนใช้ไปแล้วจร้า" } );
             }
-        } 
+        }
 
         const otp = String(Math.floor(100000 + Math.random() * 900000));
         otpStore[email] = otp;
@@ -39,25 +39,32 @@ router.post("/send-otp", async (req, res) => {
         console.log(error)
         return res.status(500).json({ msg: error.message }) 
     }
-})
+}) */
 
 router.post("/register", async (req, res) => {
     try {
-    const { name, pass, email, otp } = req.body;
-    
-    if (otpStore[email] !== otp) {
-            return res.json( { msg: "OTP ไม่ถูกต้อง" } );
+    const { name, email, pass} = req.body;
+    const userFind = await User.findOne({ $or: [{ name }, { email }] });
+
+    console.log("กำลังสร้างบัญชี");
+    if (userFind) {
+        if (userFind.name === name) {
+            return res.json( { msg: "ชื่อมีคนใช้ไปแล้วจร้า" } );
+        } else if (userFind.email === email) {
+            return res.json( { msg: "อีเมลมีคนใช้ไปแล้วจร้า" } );
         }
-    delete otpStore[email];
-    
-    const hashedPass = await bcrypt.hash(pass, 10)
-    const user = new User( { 
+    } else {
+        const hashedPass = await bcrypt.hash(pass, 10)
+        const user = new User( { 
         name,
         pass: hashedPass,
         email
-     });
-    await user.save(); 
-    return res.json( { success: true });
+     });  
+        
+        await user.save(); 
+        return res.json( { success: true });
+    }
+
     } catch(error) {
         console.error(error); 
         return res.status(500).json({ msg: error.message }) 
@@ -66,6 +73,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => {
     try {
+    console.log("กำลังlogin");
     const { nameInput, passInput } = req.body;
     const userFind = await User.findOne( { name: nameInput } );
 

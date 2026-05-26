@@ -6,7 +6,7 @@ const confirmBtn = document.getElementById("confrimBtn");
 const closedialog = document.getElementById("closemodal");
 const unlockPass = document.querySelector(".unlock-pass")
 const lockPass = document.querySelector(".lock-pass")
-let userData = {};
+/* let userData = {}; */
 
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -72,21 +72,22 @@ createBtn.addEventListener("click", async() => {
         } else if (user.pass.length < 8) {
             errMsg.innerText = "รหัสต้องมากกว่า 8 ครับท่าน"
         } else {
-            loadingOverlay.style.display = "flex";
-            const res = await fetch("https://kuaitunv3.onrender.com/user/send-otp", {
+            /* loadingOverlay.style.display = "flex"; */
+            const res = await fetch("https://kuaitunv3.onrender.com/user/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify( { name: user.name ,email: user.email } )
+                body: JSON.stringify( { name: user.name ,email: user.email, pass: user.pass } )
             });
         
         const data = await res.json();
-        loadingOverlay.style.display = "none";
+        /* loadingOverlay.style.display = "none"; */
         
         if (data.success) {
-            userData = user
-            dialog.showModal();
+            /* userData = user */
+            alert(data.msg)
+            /* dialog.showModal(); */
         } else {
             alert(data.msg);
         }
@@ -96,7 +97,7 @@ createBtn.addEventListener("click", async() => {
     }
 });
 
-confirmBtn.addEventListener("click", async () => {
+/* confirmBtn.addEventListener("click", async () => {
     try {
         const inputOtp = document.getElementById("otp").value.trim();
         
@@ -120,9 +121,9 @@ confirmBtn.addEventListener("click", async () => {
     } catch (error) {
         console.error(error);
     }
-});
+ */
 
-closedialog.addEventListener("click", () => {
+/* closedialog.addEventListener("click", () => {
     dialog;dialog.classList.add("closing");
     
     dialog.addEventListener("animationend",  handleClose = ()  => {
@@ -134,7 +135,7 @@ closedialog.addEventListener("click", () => {
 
 document.getElementById("lnw").addEventListener("click", () => {
     dialog.showModal();
-})
+}) */
 
 window.clearMsg = () => {
     errMsg.innerText = ""
