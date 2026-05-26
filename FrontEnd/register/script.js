@@ -5,7 +5,7 @@ const dialog = document.getElementById("modal");
 const confirmBtn = document.getElementById("confrimBtn");
 const closedialog = document.getElementById("closemodal");
 const unlockPass = document.querySelector(".unlock-pass")
-const lockPass = document.querySelector(".lock-pass")
+const lockPass = document.querySelector(".lock-pass");
 /* let userData = {}; */
 
 const validateEmail = (email) => {

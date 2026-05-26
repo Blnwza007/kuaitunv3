@@ -49,9 +49,9 @@ router.post("/register", async (req, res) => {
     console.log("กำลังสร้างบัญชี");
     if (userFind) {
         if (userFind.name === name) {
-            return res.json( { msg: "ชื่อมีคนใช้ไปแล้วจร้า" } );
+            return res.json( { msg: "ชื่อมีคนใช้ไปแล้วจร้า", success: false } );
         } else if (userFind.email === email) {
-            return res.json( { msg: "อีเมลมีคนใช้ไปแล้วจร้า" } );
+            return res.json( { msg: "อีเมลมีคนใช้ไปแล้วจร้า", success: false} );
         }
     } else {
         const hashedPass = await bcrypt.hash(pass, 10)
@@ -78,18 +78,18 @@ router.post("/login", async (req, res) => {
     const userFind = await User.findOne( { name: nameInput } );
 
     if (!userFind) {
-        return res.json( { msg: "ชื่อหรือรหัสไม่ถูกจร้าาา"} );
+        return res.json( { msg: "ชื่อหรือรหัสไม่ถูกจร้าาา", success: false} );
     }
 
     const isMatch = await bcrypt.compare(passInput, userFind.pass);
 
     if (!isMatch) {
-        return res.json( { msg: "ชื่อหรือรหัสไม่ถูกจร้าาา" } )
+        return res.json( { msg: "ชื่อหรือรหัสไม่ถูกจร้าาา", success: false } )
     }
     
     await User.findByIdAndUpdate(userFind._id, { hasLoggedIn: true });
     console.log(`loginเสร็จแล้ว ${nameInput}`);
-    res.json( { msg: "สมัครเป็นแฟนไข่ตุ๋นสำเร็จ" } );
+    res.json( { msg: "สมัครเป็นแฟนไข่ตุ๋นสำเร็จ", success: true } );
     }
     catch(error) {
         return res.json( { msg: error.message } )
